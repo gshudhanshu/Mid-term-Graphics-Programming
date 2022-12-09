@@ -16,7 +16,6 @@ function drawGround() {
 }
 ////////////////////////////////////////////////////////////////
 function setupPropeller() {
-  // your code here
   // creating the propeller body inside the matter.js world
   propeller = Bodies.rectangle(150, 480, 200, 15, {
     isStatic: true,
@@ -28,7 +27,6 @@ function setupPropeller() {
 //updates and draws the propeller
 function drawPropeller() {
   push()
-  // your code here
   // setting the angle of the propeller
   Body.setAngle(propeller, angle)
   Body.setAngularVelocity(propeller, angleSpeed)
@@ -60,14 +58,11 @@ function drawBirds() {
       // colors.splice(i, 1)
     }
   }
-
-  //your code here
   pop()
 }
 ////////////////////////////////////////////////////////////////
 //creates a tower of boxes
 function setupTower() {
-  //you code here
   // creating a template box to be used in the tower
   const createBox = (x, y) => {
     const box = Bodies.rectangle(x, y, 80, 80)
@@ -83,7 +78,6 @@ function setupTower() {
 //draws tower of boxes
 function drawTower() {
   push()
-  //your code here
   // drawing the tower of boxes
   for (var i = 0; i < boxes.bodies.length; i++) {
     fill(colors[i])
@@ -94,7 +88,6 @@ function drawTower() {
 }
 ////////////////////////////////////////////////////////////////
 function setupSlingshot() {
-  //your code here
   // creating the slingshot bird
   slingshotBird = Bodies.circle(150, 170, 20, {
     friction: 0,
@@ -117,7 +110,6 @@ function setupSlingshot() {
 //draws slingshot bird and its constraint
 function drawSlingshot() {
   push()
-  // your code here
   // drawing the slingshot bird
   fill(255, 200, 0)
   drawVertices(slingshotBird.vertices)
