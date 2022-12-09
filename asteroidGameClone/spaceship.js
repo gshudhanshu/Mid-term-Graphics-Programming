@@ -19,25 +19,54 @@ class Spaceship {
   }
 
   draw() {
-
     // rocket thrusters
-    fill(255,165,0)
+    fill(255, 165, 0)
     // left and right thrusters
-    if(Math.sign(this.acceleration.x)===-1){
-      ellipse(this.location.x-13, this.location.y, this.acceleration.x*200, 6);
-    } else{
-      ellipse(this.location.x+13, this.location.y, this.acceleration.x*200, 6);
+    if (Math.sign(this.acceleration.x) === -1) {
+      ellipse(
+        this.location.x - 13,
+        this.location.y,
+        this.acceleration.x * 200,
+        6
+      )
+    } else {
+      ellipse(
+        this.location.x + 13,
+        this.location.y,
+        this.acceleration.x * 200,
+        6
+      )
     }
 
     // top and bottom thrusters
-    if(Math.sign(this.acceleration.y)===-1){
-      ellipse(this.location.x-7, this.location.y+25, 6, this.acceleration.y*200);
-      ellipse(this.location.x+7, this.location.y+25, 6, this.acceleration.y*200);
+    if (Math.sign(this.acceleration.y) === -1) {
+      ellipse(
+        this.location.x - 7,
+        this.location.y + 25,
+        6,
+        this.acceleration.y * 200
+      )
+      ellipse(
+        this.location.x + 7,
+        this.location.y + 25,
+        6,
+        this.acceleration.y * 200
+      )
     } else {
-      ellipse(this.location.x+7, this.location.y-16, 6, this.acceleration.y*200);
-      ellipse(this.location.x-7, this.location.y-16, 6, this.acceleration.y*200);
+      ellipse(
+        this.location.x + 7,
+        this.location.y - 16,
+        6,
+        this.acceleration.y * 200
+      )
+      ellipse(
+        this.location.x - 7,
+        this.location.y - 16,
+        6,
+        this.acceleration.y * 200
+      )
     }
-    
+
     // rocket body
     fill(125)
     triangle(
@@ -48,7 +77,6 @@ class Spaceship {
       this.location.x,
       this.location.y - this.size / 2
     )
-
   }
 
   move() {
@@ -63,6 +91,7 @@ class Spaceship {
     this.acceleration.add(f)
   }
 
+  // Moving the spaceship with the arrow keys
   interaction() {
     if (keyIsDown(LEFT_ARROW)) {
       this.applyForce(createVector(-0.1, 0))
@@ -94,9 +123,8 @@ class Spaceship {
 
   setNearEarth() {
     //YOUR CODE HERE (6 lines approx)
-    this.friction.add(this.velocity).mult(-1/30)
+    this.friction.add(this.velocity).mult(-1 / 30)
     this.applyForce(this.friction)
     this.applyForce(this.gravity)
-
   }
 }
