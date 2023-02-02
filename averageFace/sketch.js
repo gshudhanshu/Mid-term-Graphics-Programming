@@ -4,6 +4,7 @@ var numOfImages = 30
 var randomNum = 0
 var randomImgColor
 var avgImgColor
+var lastMouseX = 0
 
 //////////////////////////////////////////////////////////
 function preload() {
@@ -16,7 +17,7 @@ function preload() {
 }
 //////////////////////////////////////////////////////////
 function setup() {
-  frameRate(5)
+  frameRate(30)
   colorMode(RGB)
   randomImgColor = color(255, 0, 0)
   avgImgColor = color(255, 255, 0)
@@ -29,6 +30,7 @@ function setup() {
   imgs.forEach((img) => {
     img.loadPixels()
   })
+  let preavgFace = averageFace()
 }
 //////////////////////////////////////////////////////////
 function draw() {
@@ -36,9 +38,10 @@ function draw() {
   image(imgs[randomNum], 0, 0)
   averageFace()
 
-  fill(lerpColor(randomImgColor, avgImgColor, 0.5))
-  circle(mouseX + 20, mouseY, 20)
-  noLoop()
+  //   fill(lerpColor(randomImgColor, avgImgColor, 0.5))
+  //   circle(mouseX + 20, mouseY, 20)
+
+  //   noLoop()
 }
 
 function averageFace() {
@@ -54,33 +57,44 @@ function averageFace() {
         sumG += img.pixels[index + 1]
         sumB += img.pixels[index + 2]
       })
-      avgImg.pixels[index + 0] = sumR / imgs.length
-      avgImg.pixels[index + 1] = sumG / imgs.length
-      avgImg.pixels[index + 2] = sumB / imgs.length
+      let lerpRatio = map(mouseX, 0, width, 0, 1)
+      avgImg.pixels[index + 0] = lerp(
+        imgs[randomNum].pixels[index + 0],
+        sumR / imgs.length,
+        lerpRatio
+      )
+      avgImg.pixels[index + 1] = lerp(
+        imgs[randomNum].pixels[index + 1],
+        sumG / imgs.length,
+        lerpRatio
+      )
+      avgImg.pixels[index + 2] = lerp(
+        imgs[randomNum].pixels[index + 2],
+        sumB / imgs.length,
+        lerpRatio
+      )
       avgImg.pixels[index + 3] = 255
     }
   }
 
   avgImg.updatePixels()
-  image(avgImg, avgImg.width, 0)
+  return image(avgImg, avgImg.width, 0)
 }
 
 function keyPressed() {
   randomNum = int(random(0, numOfImages))
-  console.log(randomNum)
   loop()
 }
 
-function mouseMoved() {
-  if (mouseX <= width && mouseY <= height) {
-    if (mouseX <= width / 2) {
-      randomImgColor = color(...get(mouseX, mouseY))
-
-      avgImgColor = color(...get(mouseX + width / 2, mouseY))
-    } else {
-      randomImgColor = color(...get(mouseX - width / 2, mouseY))
-      avgImgColor = color(...get(mouseX, mouseY))
-    }
-    loop()
-  }
-}
+// function mouseMoved() {
+//   if (mouseX <= width && mouseY <= height) {
+//     if (mouseX <= width / 2) {
+//       randomImgColor = color(...get(mouseX, mouseY))
+//       avgImgColor = color(...get(mouseX + width / 2, mouseY))
+//     } else {
+//       randomImgColor = color(...get(mouseX - width / 2, mouseY))
+//       avgImgColor = color(...get(mouseX, mouseY))
+//     }
+//     loop()
+//   }
+// }
