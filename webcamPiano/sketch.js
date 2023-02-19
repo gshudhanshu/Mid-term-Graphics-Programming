@@ -6,22 +6,16 @@ var prevImg
 var diffImg
 var currImg
 var thresholdSlider
-var threshold
 var grid
 var gui
 
 // JS Object
-let params = {
-  frame: 0,
-  x: 150,
-  y: 250,
-  dia: 50,
-  r: 255,
-  g: 255,
-  b: 255,
-  bgColor: '#333333', // dark gray
-  toggle: true,
-  text: 'Name',
+var params = {
+  threshold: 40,
+  noteSize: 40,
+  color1: [255, 0, 125],
+  color2: [0, 128, 255],
+  soundOn: false,
 }
 
 function setup() {
@@ -30,13 +24,11 @@ function setup() {
   video = createCapture(VIDEO)
   video.hide()
 
-  thresholdSlider = createSlider(0, 255, 50)
-  thresholdSlider.position(20, 20)
-
   grid = new Grid(640, 480)
   threshold = 25
   gui = new dat.GUI()
   setupGUI()
+  getAudioContext().suspend()
 }
 
 function draw() {
@@ -63,8 +55,6 @@ function draw() {
   diffImg.resize(diffImg.width / 4, diffImg.height / 4)
   diffImg.loadPixels()
 
-  threshold = thresholdSlider.value()
-
   if (typeof prevImg !== 'undefined') {
     prevImg.loadPixels()
     currImg.loadPixels()
@@ -88,7 +78,7 @@ function draw() {
           blueBack
         )
 
-        if (d > threshold) {
+        if (d > params.threshold) {
           diffImg.pixels[index + 0] = 0
           diffImg.pixels[index + 1] = 0
           diffImg.pixels[index + 2] = 0
@@ -104,10 +94,6 @@ function draw() {
   }
   diffImg.updatePixels()
   image(diffImg, 640, 0)
-
-  noFill()
-  stroke(255)
-  text(threshold, 160, 35)
 
   prevImg = createImage(currImg.width, currImg.height)
   prevImg.copy(
@@ -134,5 +120,15 @@ function distSquared(x1, y1, z1, x2, y2, z2) {
 
 // gui setup
 function setupGUI() {
-  gui.add(threshold, 'threshold', 0, 255)
+  var obj = {
+    add: function () {
+      console.log('clicked')
+    },
+  }
+  gui.add(params, 'threshold', 0, 255)
+  gui.addColor(params, 'color1')
+  gui.addColor(params, 'color2')
+  gui.add(params, 'soundOn', 0, 1).onChange(function (value) {
+    value == 1 ? userStartAudio() : getAudioContext().suspend()
+  })
 }
