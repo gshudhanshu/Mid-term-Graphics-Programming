@@ -9,7 +9,7 @@ var thresholdSlider
 var grid
 var gui
 
-// JS Object
+// JS Object to hold GUI parameters
 var params = {
   threshold: 40,
   noteSize: 40,
@@ -21,6 +21,7 @@ var params = {
 function setup() {
   createCanvas(640 * 2, 480)
   pixelDensity(1)
+  // capture video from webcam
   video = createCapture(VIDEO)
   video.hide()
 
@@ -28,6 +29,7 @@ function setup() {
   threshold = 25
   gui = new dat.GUI()
   setupGUI()
+  // start the app without sound. User can turn it on later
   getAudioContext().suspend()
 }
 
@@ -48,27 +50,33 @@ function draw() {
     video.height
   )
 
+  // resize and blur image to speed up processing
   currImg.resize(currImg.width / 4, currImg.height / 4)
   currImg.filter(BLUR, 3)
 
+  // find the difference between the current and previous frame
   diffImg = createImage(video.width, video.height)
   diffImg.resize(diffImg.width / 4, diffImg.height / 4)
   diffImg.loadPixels()
 
+  // if there is a previous frame, compare it to the current frame
   if (typeof prevImg !== 'undefined') {
     prevImg.loadPixels()
     currImg.loadPixels()
     for (var x = 0; x < currImg.width; x += 1) {
       for (var y = 0; y < currImg.height; y += 1) {
+        // get the pixel index for the current pixel.
         var index = (x + y * currImg.width) * 4
+        // get the red, green, and blue values from the current pixel
         var redSource = currImg.pixels[index + 0]
         var greenSource = currImg.pixels[index + 1]
         var blueSource = currImg.pixels[index + 2]
-
+        // get the red, green, and blue values from the previous frame at the same location
         var redBack = prevImg.pixels[index + 0]
         var greenBack = prevImg.pixels[index + 1]
         var blueBack = prevImg.pixels[index + 2]
 
+        // calculate the difference between the two pixels
         var d = dist(
           redSource,
           greenSource,
@@ -78,12 +86,15 @@ function draw() {
           blueBack
         )
 
+        // if the difference is greater than the threshold, draw a white pixel
         if (d > params.threshold) {
           diffImg.pixels[index + 0] = 0
           diffImg.pixels[index + 1] = 0
           diffImg.pixels[index + 2] = 0
           diffImg.pixels[index + 3] = 255
-        } else {
+        }
+        // otherwise, draw a black pixel
+        else {
           diffImg.pixels[index + 0] = 255
           diffImg.pixels[index + 1] = 255
           diffImg.pixels[index + 2] = 255

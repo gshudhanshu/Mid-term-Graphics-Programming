@@ -26,6 +26,7 @@ function setup() {
   frameRate(frameCountVal)
   angleMode(DEGREES)
 
+  // Confetti setup and randomization
   for (var i = 0; i < noConfetties; i++) {
     let x = random(-500, 500)
     let y = random(-800, 0)
@@ -36,6 +37,7 @@ function setup() {
     confTheta.push(angle)
   }
 
+  // GUI controls
   dat = new dat.GUI()
   dat.add(this, 'cubeMaterial', [
     'specularMaterial',
@@ -66,8 +68,14 @@ function preload() {
 function draw() {
   background(125)
 
+  // Step 2
+  // normalMaterial()
+  // stroke(0)
+  // strokeWeight(2)
+
+  // Box material
   if (cubeMaterial === 'specularMaterial') {
-    ambientLight(60, 125, 60)
+    ambientLight(60, 125, 60) // green light
     pointLight(255, 255, 255, mouseX - width / 2, mouseY - height / 2, 50)
     specularMaterial(250)
     shininess(50)
@@ -75,12 +83,13 @@ function draw() {
     normalMaterial()
   } else if (cubeMaterial === 'emissiveMaterial') {
     ambientLight(0)
-    emissiveMaterial(130, 230, 0)
+    emissiveMaterial(130, 230, 0) // green material
   } else if (cubeMaterial === 'ambientMaterial') {
     ambientLight(255, 0, 255) // magenta light
     ambientMaterial(255) // white material
   }
 
+  // Camera movement and rotation around the center
   var locX =
     800 * cos((frameCount / (frameCountVal / 10)) * cameraSpeed) * Math.sqrt(2)
   var locZ =
@@ -93,6 +102,7 @@ function draw() {
   confetti()
 }
 
+// Box grid setup
 const boxGrid = () => {
   gridStart = (-boxSide * noBoxes) / 2
   gridEnd = (boxSide * noBoxes) / 2
@@ -101,6 +111,7 @@ const boxGrid = () => {
       push()
       translate(j, 0, i)
       const distance = dist(i, j, 0, 0)
+      // Box height based on sine wave
       let length = map(
         sin(distance + frameCount * waveSpeed),
         -1,
@@ -114,11 +125,13 @@ const boxGrid = () => {
   }
 }
 
+// Confetti
 function confetti() {
   noStroke()
 
+  // Confetti material
   if (confettiMaterial === 'specularMaterial') {
-    ambientLight(60, 125, 60)
+    ambientLight(60, 125, 60) // green light
     pointLight(255, 255, 255, mouseX - width / 2, mouseY - height / 2, 50)
     specularMaterial(250)
     shininess(50)
@@ -126,12 +139,13 @@ function confetti() {
     normalMaterial()
   } else if (confettiMaterial === 'emissiveMaterial') {
     ambientLight(0)
-    emissiveMaterial(130, 230, 0)
+    emissiveMaterial(130, 230, 0) // green material
   } else if (confettiMaterial === 'ambientMaterial') {
     ambientLight(255, 0, 255) // magenta light
     ambientMaterial(255) // white material
   }
 
+  // Confetti movement and rotation
   for (var i = 0; i < confLocs.length; i++) {
     push()
     translate(confLocs[i])
@@ -140,6 +154,7 @@ function confetti() {
     confLocs[i].y += 1
     confTheta[i] += 10
 
+    // Reset confetti position
     if (confLocs[i].y >= 0) {
       confLocs[i].y = -800
     }
